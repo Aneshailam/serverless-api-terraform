@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Serverless Items</title>
+  <style>
+    body { font-family: system-ui, sans-serif; max-width: 560px; margin: 40px auto; padding: 0 16px; }
+    form { display: flex; gap: 8px; margin-bottom: 20px; }
+    input { flex: 1; padding: 8px; }
+    button { padding: 8px 14px; cursor: pointer; }
+    li { display: flex; justify-content: space-between; padding: 8px 0; border-bottom: 1px solid #ddd; }
+    #status { color: #666; font-size: 14px; }
+  </style>
+</head>
+<body>
+  <h1>Serverless Items</h1>
+  <p id="status"></p>
+  <form id="add-form">
+    <input id="name" placeholder="New item name" required maxlength="200">
+    <button type="submit">Add</button>
+  </form>
+  <ul id="list"></ul>
+
+  <script src="config.js"></script>
+  <script>
+    const api = window.API_URL;
+    const list = document.getElementById("list");
+    const status = document.getElementById("status");
+
+    async function load() {
+      try {
+        const res = await fetch(api + "/items");
+        const data = await res.json();
+        list.innerHTML = "";
+        data.items.forEach(function (item) {
+          const li = document.createElement("li");
+          const span = document.createElement("span");
+          span.textContent = item.name;
+          const btn = document.createElement("button");
+          btn.textContent = "Delete";
+          btn.onclick = async function () {
+            await fetch(api + "/items/" + item.id, { method: "DELETE" });
+            load();
+          };
+          li.append(span, btn);
+          list.appendChild(li);
+        });
+        status.textContent = data.items.length + " item(s)";
+      } catch (e) {
+        status.textContent = "Could not reach the API.";
+      }
+    }
+
+    document.getElementById("add-form").addEventListener("submit", async function (e) {
+      e.preventDefault();
+      const input = document.getElementById("name");
+      await fetch(api + "/items", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ name: input.value })
+      });
+      input.value = "";
+      load();
+    });
+
+    load();
+  </script>
+</body>
+</html>
