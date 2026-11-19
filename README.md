@@ -156,6 +156,10 @@ cd ../dev && terraform destroy
 
 The state bucket in `bootstrap/` is versioned, so empty it (including old versions) before destroying it.
 
-## Lessons learned
+## Possible improvements
 
-Write 2 or 3 points in your own words here: what was hard, what you fixed, what you would improve.
+- Add authentication to the API (Cognito or a JWT authorizer). Right now the API is open.
+- Restrict CORS to the CloudFront domain instead of `*`.
+- Deploy automatically with GitHub Actions: plan on pull requests, apply on merge.
+- Add a custom domain with Route 53 and an ACM certificate.
+- Add API Gateway access logs and CloudWatch alarms for Lambda errors.
