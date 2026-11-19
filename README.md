@@ -136,15 +136,6 @@ terraform apply
 - CORS is open (`*`) so the frontend can call the API. For a real product, restrict it to your CloudFront domain.
 - The API has no authentication. Add a JWT authorizer or Cognito before using it with real data.
 
-## Screenshots
-
-Add your own screenshots to a `docs/` folder and show them here, for example:
-
-- `terraform apply` output for dev
-- The deployed website
-- API Gateway routes and the Lambda functions in the AWS console
-- The S3 state bucket showing separate state files for dev and prod
-
 ## Cleanup
 
 Destroy prod first if you deployed it, then dev, then the bootstrap resources:
